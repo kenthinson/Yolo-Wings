@@ -4,10 +4,10 @@ Yolo Wings is an image annotation software designed to be compatible with Yolo /
 
 The Goals of the Yolo Wings project are
 
-*No dependency binary download for Windows, Mac, and Linux.
-*Fast.
-*Easy to use.
-*Open Source and free.
+* No dependency binary download for Windows, Mac, and Linux.
+* Fast.
+* Easy to use.
+* Open Source and free.
 
 ![Cover Image](https://raw.githubusercontent.com/kenthinson/Yolo-Wings/master/cover.jpg)
 
