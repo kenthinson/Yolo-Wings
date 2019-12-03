@@ -36,18 +36,12 @@ class _MyHomePageState extends State<MyHomePage> {
   var path = "";
   var crosshairOffsetLeft = 0.0;
   var crosshairOffsetTop = 0.0;
+  var lastClassNameChoses = 0;
   Annotation newAnnotaton;
   List<Annotation> currentImageAnnotations = [
     Annotation(Offset(10, 10), Offset(100, 100), 0),
     Annotation(Offset(500, 500), Offset(600, 600), 1),
   ];
-
-    @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    FocusScope.of(context).requestFocus(_focusNode);
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -211,8 +205,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       var width =
                                           MediaQuery.of(context).size.width;
                                       return Container(
-                                        height: height - 1000,
-                                        width: width - 1000,
+                                        height: 800,
+                                        width: 500,
+                                        child: TextField(),
                                       );
                                     },
                                   ),
