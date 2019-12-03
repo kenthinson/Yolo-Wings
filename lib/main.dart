@@ -28,15 +28,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
+
 class _MyHomePageState extends State<MyHomePage> {
   var path = "";
   var crosshairOffsetLeft = 0.0;
   var crosshairOffsetTop = 0.0;
+  Annotation newAnnotaton;
   List<Annotation> currentImageAnnotations = [
     Annotation(Offset(10, 10), Offset(100, 100), 0),
     Annotation(Offset(500, 500), Offset(600, 600), 1),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,15 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             crosshairOffsetLeft = event.localPosition.dx;
             crosshairOffsetTop = event.localPosition.dy;
+            if(newAnnotaton != null){
+              setState(() {
+                newAnnotaton.point2 = event.localPosition;
+              });
+            }
           });
+        },
+        onPointerUp: (event){
+          newAnnotaton = null;
         },
         onPointerDown: (event) {
           setState(() {
@@ -96,6 +105,22 @@ class _MyHomePageState extends State<MyHomePage> {
                   top: crosshairOffsetTop,
                   child: Container(
                     color: Colors.red,
+                  )),
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  top: 0,
+                  child: Listener(
+                    onPointerDown: (event) {
+                      newAnnotaton = Annotation(event.localPosition,event.localPosition,0);
+                      setState(() {
+                      currentImageAnnotations.add(newAnnotaton);
+                      });
+                    },
+                    child: Container(
+                      color: Colors.black.withOpacity(0),
+                    ),
                   )),
               Positioned(
                 left: 0,
