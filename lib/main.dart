@@ -43,6 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Annotation(Offset(500, 500), Offset(600, 600), 1),
   ];
 
+      @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    FocusScope.of(context).requestFocus(_focusNode);
+  }
+
   @override
   Widget build(BuildContext context) {
     var appBar = AppBar(
