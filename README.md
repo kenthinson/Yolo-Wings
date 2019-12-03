@@ -2,6 +2,8 @@
 
 A new Flutter project.
 
+![Cover Image](https://raw.githubusercontent.com/kenthinson/Yolo-Wings/master/cover.jpg)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
