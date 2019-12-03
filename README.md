@@ -1,4 +1,4 @@
-# yolowings
+# Yolo Wings
 
 Yolo Wings is an image annotation software designed to be compatible with Yolo / Darknet. Yolo Wings written in Dart using Googles Flutter Framework.
 
