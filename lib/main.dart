@@ -110,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     crosshairOffsetLeft = event.localPosition.dx;
                     crosshairOffsetTop =
-                        event.localPosition.dy;
+                        event.localPosition.dy - 40;
                   });
                 },
                 child: Stack(
