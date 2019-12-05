@@ -54,9 +54,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var appBar = AppBar(
-      actions: <Widget>[
-        IconButton(
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          Container(color: Colors.blue, child: Row(
+            children: <Widget>[
+                     IconButton(
           icon: Icon(Icons.file_upload),
           onPressed: () {
             FilePicker.getFilePath().then((onValue) {
@@ -65,110 +68,109 @@ class _MyHomePageState extends State<MyHomePage> {
               });
             });
           },
-        )
-      ],
-      title: Text(widget.title),
-    );
-    return Scaffold(
-      appBar: appBar,
-      body: RawKeyboardListener(
-        focusNode: _focusNode,
-        onKey: (event) {
-          if (event.runtimeType == RawKeyDownEvent) {
-            if (event.data.logicalKey.debugName == "Backspace") {
-              if (currentImageAnnotations.length > 0) {
-                setState(() {
-                  currentImageAnnotations.removeLast();
-                });
+        ) 
+            ],
+          ), height: 40,),
+          RawKeyboardListener(
+            focusNode: _focusNode,
+            onKey: (event) {
+              if (event.runtimeType == RawKeyDownEvent) {
+                if (event.data.logicalKey.debugName == "Backspace") {
+                  if (currentImageAnnotations.length > 0) {
+                    setState(() {
+                      currentImageAnnotations.removeLast();
+                    });
+                  }
+                }
               }
-            }
-          }
-        },
-        child: Listener(
-          onPointerMove: (event) {
-            setState(() {
-              crosshairOffsetLeft = event.localPosition.dx;
-              crosshairOffsetTop = event.localPosition.dy;
-              if (newAnnotaton != null) {
-                setState(() {
-                  newAnnotaton.point2 = event.localPosition;
-                });
-              }
-            });
-          },
-          onPointerUp: (event) {
-            newAnnotaton = null;
-          },
-          onPointerDown: (event) {
-            setState(() {
-              crosshairOffsetLeft = event.localPosition.dx;
-              crosshairOffsetTop = event.localPosition.dy;
-            });
-          },
-          child: MouseRegion(
-            onHover: (event) {
-              setState(() {
-                crosshairOffsetLeft = event.localPosition.dx;
-                crosshairOffsetTop =
-                    event.localPosition.dy - appBar.preferredSize.height;
-              });
             },
-            child: Stack(
-              children: <Widget>[
-                Image.file(File(path)),
-                Positioned(
-                    top: 0,
-                    bottom: 0,
-                    width: 1,
-                    left: crosshairOffsetLeft,
-                    child: Container(
-                      color: Colors.red,
-                    )),
-                Positioned(
-                    left: 0,
-                    right: 0,
-                    height: 1,
-                    top: crosshairOffsetTop,
-                    child: Container(
-                      color: Colors.red,
-                    )),
-                Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    top: 0,
-                    child: Listener(
-                      onPointerDown: (event) {
-                        newAnnotaton = Annotation(
-                            event.localPosition, event.localPosition, 0);
-                        setState(() {
-                          currentImageAnnotations.add(newAnnotaton);
-                        });
-                      },
-                      child: Container(
-                        color: Colors.black.withOpacity(0),
+            child: Listener(
+              onPointerMove: (event) {
+                setState(() {
+                  crosshairOffsetLeft = event.localPosition.dx;
+                  crosshairOffsetTop = event.localPosition.dy;
+                  if (newAnnotaton != null) {
+                    setState(() {
+                      newAnnotaton.point2 = event.localPosition;
+                    });
+                  }
+                });
+              },
+              onPointerUp: (event) {
+                newAnnotaton = null;
+              },
+              onPointerDown: (event) {
+                setState(() {
+                  crosshairOffsetLeft = event.localPosition.dx;
+                  crosshairOffsetTop = event.localPosition.dy;
+                });
+              },
+              child: MouseRegion(
+                onHover: (event) {
+                  setState(() {
+                    crosshairOffsetLeft = event.localPosition.dx;
+                    crosshairOffsetTop =
+                        event.localPosition.dy;
+                  });
+                },
+                child: Stack(
+                  children: <Widget>[
+                    Image.file(File(path)),
+                    Positioned(
+                        top: 0,
+                        bottom: 0,
+                        width: 1,
+                        left: crosshairOffsetLeft,
+                        child: Container(
+                          color: Colors.red,
+                        )),
+                    Positioned(
+                        left: 0,
+                        right: 0,
+                        height: 1,
+                        top: crosshairOffsetTop,
+                        child: Container(
+                          color: Colors.red,
+                        )),
+                    Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        top: 0,
+                        child: Listener(
+                          onPointerDown: (event) {
+                            newAnnotaton = Annotation(
+                                event.localPosition, event.localPosition, 0);
+                            setState(() {
+                              currentImageAnnotations.add(newAnnotaton);
+                            });
+                          },
+                          child: Container(
+                            color: Colors.black.withOpacity(0),
+                          ),
+                        )),
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      right: 0,
+                      child: Builder(
+                        builder: (context) {
+                          List<Widget> annotationBoxes = currentImageAnnotations
+                              .map((data) => buildAnnotation(context, data))
+                              .toList();
+                          return Stack(
+                            children: annotationBoxes,
+                          );
+                        },
                       ),
-                    )),
-                Positioned(
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  right: 0,
-                  child: Builder(
-                    builder: (context) {
-                      List<Widget> annotationBoxes = currentImageAnnotations
-                          .map((data) => buildAnnotation(context, data))
-                          .toList();
-                      return Stack(
-                        children: annotationBoxes,
-                      );
-                    },
-                  ),
-                )
-              ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
