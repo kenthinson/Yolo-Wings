@@ -37,16 +37,19 @@ class _MyHomePageState extends State<MyHomePage> {
   var crosshairOffsetLeft = 0.0;
   var crosshairOffsetTop = 0.0;
   var lastClassNameChoses = 0;
+  var overlayShowing = false;
   Annotation newAnnotaton;
   List<Annotation> currentImageAnnotations = [
     Annotation(Offset(10, 10), Offset(100, 100), 0),
     Annotation(Offset(500, 500), Offset(600, 600), 1),
   ];
 
-      @override
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    FocusScope.of(context).requestFocus(_focusNode);
+    if (!overlayShowing) {
+      FocusScope.of(context).requestFocus(_focusNode);
+    }
   }
 
   @override
@@ -70,30 +73,30 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: appBar,
       body: RawKeyboardListener(
         focusNode: _focusNode,
-        onKey: (event){
-          if(event.runtimeType == RawKeyDownEvent){
-            if(event.data.logicalKey.debugName == "Backspace"){
-             if(currentImageAnnotations.length > 0) {
-               setState(() {
-                 currentImageAnnotations.removeLast();
-               });
-             }
+        onKey: (event) {
+          if (event.runtimeType == RawKeyDownEvent) {
+            if (event.data.logicalKey.debugName == "Backspace") {
+              if (currentImageAnnotations.length > 0) {
+                setState(() {
+                  currentImageAnnotations.removeLast();
+                });
+              }
             }
           }
         },
-              child: Listener(
+        child: Listener(
           onPointerMove: (event) {
             setState(() {
               crosshairOffsetLeft = event.localPosition.dx;
               crosshairOffsetTop = event.localPosition.dy;
-              if(newAnnotaton != null){
+              if (newAnnotaton != null) {
                 setState(() {
                   newAnnotaton.point2 = event.localPosition;
                 });
               }
             });
           },
-          onPointerUp: (event){
+          onPointerUp: (event) {
             newAnnotaton = null;
           },
           onPointerDown: (event) {
@@ -136,9 +139,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     top: 0,
                     child: Listener(
                       onPointerDown: (event) {
-                        newAnnotaton = Annotation(event.localPosition,event.localPosition,0);
+                        newAnnotaton = Annotation(
+                            event.localPosition, event.localPosition, 0);
                         setState(() {
-                        currentImageAnnotations.add(newAnnotaton);
+                          currentImageAnnotations.add(newAnnotaton);
                         });
                       },
                       child: Container(
@@ -185,10 +189,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.black.withOpacity(0.0),
                     ),
                     onTapDown: (event) {
-                      setState(() {
-                        currentImageAnnotations.remove(annotation);
-                        currentImageAnnotations.add(annotation);
-                      });
+                      bringToFront(annotation);
                     },
                   ),
                 ),
@@ -197,28 +198,40 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
                     child: GestureDetector(
                       child: Text(classNames[annotation.label]),
-                      onTapDown: (event) {
-                        showDialog(
-                            context: context,
-                            builder: (_) => new AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0))),
-                                  content: Builder(
-                                    builder: (context) {
-                                      var height =
-                                          MediaQuery.of(context).size.height;
-                                      var width =
-                                          MediaQuery.of(context).size.width;
-                                      return Container(
-                                        height: 800,
-                                        width: 500,
-                                        child: TextField(),
-                                      );
-                                    },
-                                  ),
-                                ));
-                      },
+                      onTapDown: 
+                          (event) {
+                            if(isFront){
+                              overlayShowing = true;
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10.0))),
+                                        content: Builder(
+                                          builder: (context) {
+                                            var height = MediaQuery.of(context)
+                                                .size
+                                                .height;
+                                            var width = MediaQuery.of(context)
+                                                .size
+                                                .width;
+                                            return Container(
+                                              height: 800,
+                                              width: 500,
+                                              child: TextField(
+                                                autofocus: true,
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      )).then((value) {
+                                overlayShowing = false;
+                              });
+                            }else{
+                              bringToFront(annotation);
+                            }
+                            },
                     ),
                     color: color,
                   ),
@@ -358,6 +371,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
+  }
+
+  bringToFront(Annotation annotation) {
+    setState(() {
+      currentImageAnnotations.remove(annotation);
+      currentImageAnnotations.add(annotation);
+    });
   }
 }
 
