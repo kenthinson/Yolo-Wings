@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               overlayShowing = true;
                               showDialog(
                                   context: context,
-                                  builder: (_) => SearchDialogWidget()).then((value) {
+                                  builder: (_) => SearchDialogWidget(classNames)).then((value) {
                                 overlayShowing = false;
                               });
                             }else{
