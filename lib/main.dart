@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'annotation.dart';
+import 'SearchDialogWidget.dart';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -207,28 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               overlayShowing = true;
                               showDialog(
                                   context: context,
-                                  builder: (_) => AlertDialog(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        content: Builder(
-                                          builder: (context) {
-                                            var height = MediaQuery.of(context)
-                                                .size
-                                                .height;
-                                            var width = MediaQuery.of(context)
-                                                .size
-                                                .width;
-                                            return Container(
-                                              height: 800,
-                                              width: 500,
-                                              child: TextField(
-                                                autofocus: true,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      )).then((value) {
+                                  builder: (_) => SearchDialogWidget()).then((value) {
                                 overlayShowing = false;
                               });
                             }else{
@@ -383,5 +363,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 }
+
 
 
