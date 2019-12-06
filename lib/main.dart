@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'annotation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -383,13 +384,4 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Annotation {
-  Offset point1;
-  Offset point2;
-  int label;
-  Annotation(p1, p2, label) {
-    this.point1 = p1;
-    this.point2 = p2;
-    this.label = label;
-  }
-}
+
