@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:path/path.dart' as path;
 
 class StartScreen extends StatefulWidget {
   const StartScreen({Key key}) : super(key: key);
@@ -23,7 +25,14 @@ class _StartScreenState extends State<StartScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(5.0),
                   side: BorderSide(color: Colors.white)),
-              onPressed: () {},
+              onPressed: () {
+                FilePicker.getFilePath().then((pathString){
+                  if(pathString != ""){
+                    var dirPath = path.dirname(pathString);
+                    print(dirPath);
+                  }
+                });
+              },
               color: Colors.blue,
               padding: EdgeInsets.all(8.0),
               textColor: Colors.white,
