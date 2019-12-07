@@ -13,13 +13,18 @@ class _SearchDialogWidgetState extends State<SearchDialogWidget> {
 
   var textFocusNode = FocusNode();
   var controller = TextEditingController();
-  var lastTyped = "";
+  var lastTyped = "test";
   List<String> filteredClassNames;
 
   @override
   void initState() {
     super.initState();
     filteredClassNames = widget.classNames;
+    textFocusNode.addListener((){
+      if(textFocusNode.hasFocus && controller.text != lastTyped){
+        controller.text = lastTyped;
+      }
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -56,6 +61,7 @@ class _SearchDialogWidgetState extends State<SearchDialogWidget> {
                     return MaterialButton(
                       onPressed: (){
                         FocusScope.of(context).requestFocus(textFocusNode);
+                        lastTyped = filteredClassNames[index];
                       },
                       focusNode: fn,
                       child: Text(filteredClassNames[index]),
