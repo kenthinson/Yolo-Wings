@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SearchDialogWidget extends StatefulWidget {
-  List<String> classNames;
+  final List<String> classNames;
   SearchDialogWidget(List<String> classNames) : this.classNames = classNames;
 
   @override
