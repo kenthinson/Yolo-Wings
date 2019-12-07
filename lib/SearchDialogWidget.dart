@@ -12,7 +12,7 @@ class _SearchDialogWidgetState extends State<SearchDialogWidget> {
 
   var textFocusNode = FocusNode();
   var controller = TextEditingController();
-  var lastTyped = "test";
+  var lastTyped = "";
   List<String> filteredClassNames;
 
   @override
