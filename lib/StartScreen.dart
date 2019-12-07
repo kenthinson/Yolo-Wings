@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
@@ -10,6 +12,8 @@ class StartScreen extends StatefulWidget {
 }
 
 class _StartScreenState extends State<StartScreen> {
+  var imagePaths = [];
+  var annotationPaths = [];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,7 +21,6 @@ class _StartScreenState extends State<StartScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
-        
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -26,14 +29,23 @@ class _StartScreenState extends State<StartScreen> {
                   borderRadius: new BorderRadius.circular(5.0),
                   side: BorderSide(color: Colors.white)),
               onPressed: () {
-                FilePicker.getFilePath().then((pathString){
-                  if(pathString != ""){
+                FilePicker.getFilePath().then((pathString) {
+                  if (pathString != "") {
                     var dirPath = path.dirname(pathString);
-                    print(dirPath);
+                    var dir = Directory(dirPath);
+                    var lister = dir.list(recursive: false);
+                    List<String> filePaths = [];
+                    lister.listen((file) {
+                      filePaths.add(file.path);
+                    }, onDone: () {
+                      setState(() {
+                        imagePaths = filePaths;
+                      });
+                    });
                   }
                 });
               },
-              color: Colors.blue,
+              color: imagePaths.length == 0 ? Colors.blue : Colors.lightGreen,
               padding: EdgeInsets.all(8.0),
               textColor: Colors.white,
               child: Text("1. Select images folder.".toUpperCase(),
@@ -46,8 +58,25 @@ class _StartScreenState extends State<StartScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(5.0),
                   side: BorderSide(color: Colors.white)),
-              onPressed: null,
-              color: Colors.blue,
+              onPressed: imagePaths.length == 0 ? null : (){
+                FilePicker.getFilePath().then((pathString) {
+                  if (pathString != "") {
+                    var dirPath = path.dirname(pathString);
+                    var dir = Directory(dirPath);
+                    var lister = dir.list(recursive: false);
+                    List<String> filePaths = [];
+                    lister.listen((file) {
+                      filePaths.add(file.path);
+                    }, onDone: () {
+                      setState(() {
+                        annotationPaths = filePaths;
+                      });
+                    });
+                  }
+                });
+              },
+              //color: Colors.blue,
+              color: annotationPaths.length == 0 ? Colors.blue : Colors.lightGreen,
               padding: EdgeInsets.all(10.0),
               textColor: Colors.white,
               child: Text("2. Select annotations folder.".toUpperCase(),
@@ -60,7 +89,9 @@ class _StartScreenState extends State<StartScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(5.0),
                   side: BorderSide(color: Colors.white)),
-              onPressed: null,
+              onPressed: (imagePaths.length == 0 || annotationPaths.length == 0) ? null : (){
+
+              },
               color: Colors.blue,
               padding: EdgeInsets.all(10.0),
               textColor: Colors.white,
