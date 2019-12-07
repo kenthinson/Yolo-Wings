@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SearchDialogWidget extends StatefulWidget {
   List<String> classNames;
@@ -9,6 +10,17 @@ class SearchDialogWidget extends StatefulWidget {
 }
 
 class _SearchDialogWidgetState extends State<SearchDialogWidget> {
+
+  var textFocusNode = FocusNode();
+  var controller = TextEditingController();
+  var lastTyped = "";
+  List<String> filteredClassNames;
+
+  @override
+  void initState() {
+    super.initState();
+    filteredClassNames = widget.classNames;
+  }
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -22,14 +34,31 @@ class _SearchDialogWidgetState extends State<SearchDialogWidget> {
             child: Column(
               children: <Widget>[
                 TextField(
+                  focusNode: textFocusNode,
                   autofocus: true,
+                  controller: controller,
+                  onChanged: (text){
+                    setState(() {
+                    filteredClassNames = widget.classNames.where((name) => name.toLowerCase().startsWith(text.toLowerCase())).toList();
+                    });
+                  },
                 ),
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: 5,
+                  itemCount: filteredClassNames.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text('Gujarat, India'),
+                    var fn = FocusNode();
+                    fn.addListener((){
+                      if (fn.hasFocus){
+                        controller.text = filteredClassNames[index];
+                      }
+                    });
+                    return MaterialButton(
+                      onPressed: (){
+                        FocusScope.of(context).requestFocus(textFocusNode);
+                      },
+                      focusNode: fn,
+                      child: Text(filteredClassNames[index]),
                     );
                   },
                 ),
