@@ -46,6 +46,9 @@ class _SearchDialogWidgetState extends State<SearchDialogWidget> {
                     filteredClassNames = widget.classNames.where((name) => name.toLowerCase().startsWith(text.toLowerCase())).toList();
                     });
                   },
+                  onSubmitted: (text){
+                    Navigator.pop(context, text);
+                  },
                 ),
                 ListView.builder(
                   shrinkWrap: true,
