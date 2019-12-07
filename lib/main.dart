@@ -209,7 +209,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               showDialog(
                                   context: context,
                                   builder: (_) => SearchDialogWidget(classNames)).then((value) {
-                                    print(value);
                                     if(value != null){
                                       if(!classNames.contains(value)){
                                         classNames.add(value);
