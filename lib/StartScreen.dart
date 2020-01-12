@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 
+import 'main.dart';
+
 class StartScreen extends StatefulWidget {
   const StartScreen({Key key}) : super(key: key);
 
@@ -58,25 +60,27 @@ class _StartScreenState extends State<StartScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(5.0),
                   side: BorderSide(color: Colors.white)),
-              onPressed: imagePaths.length == 0 ? null : (){
-                FilePicker.getFilePath().then((pathString) {
-                  if (pathString != "") {
-                    var dirPath = path.dirname(pathString);
-                    var dir = Directory(dirPath);
-                    var lister = dir.list(recursive: false);
-                    List<String> filePaths = [];
-                    lister.listen((file) {
-                      filePaths.add(file.path);
-                    }, onDone: () {
-                      setState(() {
-                        annotationPaths = filePaths;
+              onPressed: imagePaths.length == 0
+                  ? null
+                  : () {
+                      FilePicker.getFilePath().then((pathString) {
+                        if (pathString != "") {
+                          var dirPath = path.dirname(pathString);
+                          var dir = Directory(dirPath);
+                          var lister = dir.list(recursive: false);
+                          List<String> filePaths = [];
+                          lister.listen((file) {
+                            filePaths.add(file.path);
+                          }, onDone: () {
+                            setState(() {
+                              annotationPaths = filePaths;
+                            });
+                          });
+                        }
                       });
-                    });
-                  }
-                });
-              },
-              //color: Colors.blue,
-              color: annotationPaths.length == 0 ? Colors.blue : Colors.lightGreen,
+                    },
+              color:
+                  annotationPaths.length == 0 ? Colors.blue : Colors.lightGreen,
               padding: EdgeInsets.all(10.0),
               textColor: Colors.white,
               child: Text("2. Select annotations folder.".toUpperCase(),
@@ -89,9 +93,15 @@ class _StartScreenState extends State<StartScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(5.0),
                   side: BorderSide(color: Colors.white)),
-              onPressed: (imagePaths.length == 0 || annotationPaths.length == 0) ? null : (){
-
-              },
+              onPressed: (imagePaths.length == 0 || annotationPaths.length == 0)
+                  ? null
+                  : () {
+                      FilePicker.getFilePath();
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => MyHomePage()),
+                      // );
+                    },
               color: Colors.blue,
               padding: EdgeInsets.all(10.0),
               textColor: Colors.white,

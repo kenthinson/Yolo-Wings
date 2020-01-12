@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
-      home: StartScreen(),
+      home: MyHomePage(),
     );
   }
 }
@@ -116,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     crosshairOffsetLeft = event.localPosition.dx;
                     crosshairOffsetTop =
-                        event.localPosition.dy - 40;
+                        event.localPosition.dy ;
                   });
                 },
                 child: Stack(
