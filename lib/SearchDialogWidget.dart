@@ -62,6 +62,7 @@ class _SearchDialogWidgetState extends State<SearchDialogWidget> {
                     });
                     return MaterialButton(
                       onPressed: (){
+                        controller.text = filteredClassNames[index];
                         FocusScope.of(context).requestFocus(textFocusNode);
                         lastTyped = filteredClassNames[index];
                       },

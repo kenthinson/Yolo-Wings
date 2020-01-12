@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'annotation.dart';
 import 'SearchDialogWidget.dart';
+import 'StartScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      //home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
@@ -40,6 +42,8 @@ class _MyHomePageState extends State<MyHomePage> {
   var crosshairOffsetTop = 0.0;
   var lastClassNameChoses = 0;
   var overlayShowing = false;
+  Future<String> imagePaths;
+
   Annotation newAnnotaton;
   List<Annotation> currentImageAnnotations = [
     Annotation(Offset(10, 10), Offset(100, 100), 0),
@@ -112,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   setState(() {
                     crosshairOffsetLeft = event.localPosition.dx;
                     crosshairOffsetTop =
-                        event.localPosition.dy - 40;
+                        event.localPosition.dy ;
                   });
                 },
                 child: Stack(
@@ -209,7 +213,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               showDialog(
                                   context: context,
                                   builder: (_) => SearchDialogWidget(classNames)).then((value) {
-                                    print(value);
                                     if(value != null){
                                       if(!classNames.contains(value)){
                                         classNames.add(value);
