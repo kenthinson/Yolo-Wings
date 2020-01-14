@@ -64,15 +64,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.3"
-  file_picker:
+  file_chooser:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "010230c43ff99679466ffad70666f7c9dd2bc871"
-      url: "https://github.com/kenthinson/flutter_file_picker.git"
-    source: git
-    version: "1.4.3+2"
+      path: "/Users/kent/Developer/flutter-desktop-embedding/plugins/file_chooser"
+      relative: false
+    source: path
+    version: "0.1.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -111,6 +109,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  path_provider:
+    dependency: "direct main"
+    description:
+      name: path_provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.1"
+  path_provider_macos:
+    dependency: "direct main"
+    description:
+      name: path_provider_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2+1"
   pedantic:
     dependency: transitive
     description:
@@ -125,6 +137,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.1"
   quiver:
     dependency: transitive
     description:
@@ -202,3 +221,4 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
+  flutter: ">=1.10.0 <2.0.0"
