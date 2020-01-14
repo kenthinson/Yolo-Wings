@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:file_chooser/file_chooser.dart' as file_chooser;
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart';
 
 import 'SearchDialogWidget.dart';
 import 'annotation.dart';
@@ -25,21 +27,22 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
+  List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
   final FocusNode _focusNode = FocusNode();
   var path = "";
   var crosshairOffsetLeft = 0.0;
   var crosshairOffsetTop = 0.0;
   var lastClassNameChoses = 0;
   var overlayShowing = false;
-  Future<String> imagePaths;
-    Annotation newAnnotaton;
+
+  List<String> imagePaths;
+
+  Annotation newAnnotaton;
   List<Annotation> currentImageAnnotations = [
     Annotation(Offset(10, 10), Offset(100, 100), 0),
     Annotation(Offset(500, 500), Offset(600, 600), 1),
@@ -56,33 +59,45 @@ List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
               children: <Widget>[
                 IconButton(
                   onPressed: () async {
-
-                String initialDirectory;
-                if (Platform.isMacOS) {
-                  initialDirectory =
-                      (await getApplicationDocumentsDirectory()).path;
-                }
-                file_chooser
-                    .showOpenPanel(
-                        allowsMultipleSelection: false,
-                        initialDirectory: initialDirectory,
-                        canSelectDirectories: true)
-                    .then(
-                  (result) {
-                    if (result.canceled) {
-                      print('canceled');
-                    } else {
-                      print(result.paths[0]);
+                    String initialDirectory;
+                    if (Platform.isMacOS) {
+                      initialDirectory =
+                          (await getApplicationDocumentsDirectory()).path;
                     }
-                  },
-                );
+                    file_chooser
+                        .showOpenPanel(
+                            allowsMultipleSelection: false,
+                            initialDirectory: initialDirectory,
+                            canSelectDirectories: true)
+                        .then(
+                      (result) {
+                        if (result.canceled) {
+                          print('canceled');
+                        } else {
+                          imagePaths = [];
+                          var dir = Directory(result.paths[0]);
+                          var lister = dir.list(recursive: false);
+                          List<String> filePaths = [];
+                          lister.listen((file) {
+                            if(extension(file.path) == ".jpg" || extension(file.path) == ".jpeg"){
+                            filePaths.add(file.path);
+                            }
+                          }, onDone: () {
+                            setState(() {
+                              imagePaths = filePaths;
+                              path = imagePaths[0];
+                            });
+                          });
+                        }
+                      },
+                    );
                   },
                   icon: Icon(Icons.folder_open),
                 )
               ],
             ),
           ),
-                    RawKeyboardListener(
+          RawKeyboardListener(
             focusNode: _focusNode,
             onKey: (event) {
               if (event.runtimeType == RawKeyDownEvent) {
@@ -120,8 +135,7 @@ List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
                 onHover: (event) {
                   setState(() {
                     crosshairOffsetLeft = event.localPosition.dx;
-                    crosshairOffsetTop =
-                        event.localPosition.dy ;
+                    crosshairOffsetTop = event.localPosition.dy;
                   });
                 },
                 child: Stack(
@@ -211,27 +225,27 @@ List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
                     padding: EdgeInsets.fromLTRB(8.0, 5.0, 8.0, 5.0),
                     child: GestureDetector(
                       child: Text(classNames[annotation.label]),
-                      onTapDown: 
-                          (event) {
-                            if(isFront){
-                              overlayShowing = true;
-                              showDialog(
-                                  context: context,
-                                  builder: (_) => SearchDialogWidget(classNames)).then((value) {
-                                    if(value != null){
-                                      if(!classNames.contains(value)){
-                                        classNames.add(value);
-                                      }
-                                      setState(() {
-                                        annotation.label = classNames.indexOf(value);
-                                      });
-                                    }
-                                overlayShowing = false;
+                      onTapDown: (event) {
+                        if (isFront) {
+                          overlayShowing = true;
+                          showDialog(
+                              context: context,
+                              builder: (_) =>
+                                  SearchDialogWidget(classNames)).then((value) {
+                            if (value != null) {
+                              if (!classNames.contains(value)) {
+                                classNames.add(value);
+                              }
+                              setState(() {
+                                annotation.label = classNames.indexOf(value);
                               });
-                            }else{
-                              bringToFront(annotation);
                             }
-                            },
+                            overlayShowing = false;
+                          });
+                        } else {
+                          bringToFront(annotation);
+                        }
+                      },
                     ),
                     color: color,
                   ),
@@ -380,5 +394,3 @@ List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
     });
   }
 }
-
-
