@@ -107,11 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.folder_open),
                   tooltip: 'Open Images Folder',
                 ),
-                IconButton(icon: Icon(Icons.keyboard_arrow_left), onPressed: (){
+                IconButton(icon: Icon(Icons.keyboard_arrow_left), onPressed:(imageindex != 0)? (){
                   setState(() {
                     imageindex --;
                   });
-                }, tooltip: 'Back a Image',),
+                } : null, tooltip: 'Back a Image',),
                 IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: (){
                   setState(() {
                   imageindex ++;
