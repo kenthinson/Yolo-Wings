@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:xml/xml.dart';
+import 'package:xml/xml.dart' as xml;
 
 import 'package:flutter/material.dart';
 import 'package:file_chooser/file_chooser.dart' as file_chooser;
@@ -35,13 +35,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> classNames = ["Yoda", "Chewy", "Han", "Luke"];
   final FocusNode _focusNode = FocusNode();
-  var path = "";
   var crosshairOffsetLeft = 0.0;
   var crosshairOffsetTop = 0.0;
   var lastClassNameChoses = 0;
   var overlayShowing = false;
+  var imageindex = 0;
 
-  List<String> imagePaths;
+  List<String> imagePaths = [""];
 
   Annotation newAnnotaton;
   List<Annotation> currentImageAnnotations = [
@@ -87,20 +87,36 @@ class _MyHomePageState extends State<MyHomePage> {
                           }, onDone: () {
                             setState(() {
                               imagePaths = filePaths;
-                              path = imagePaths[0];
-                              var xmlPath = withoutExtension(imagePaths[0]) + '.xml';
+                              var xmlPath =
+                                  withoutExtension(imagePaths[0]) + '.xml';
                               var xmlFile = File(xmlPath);
-                              if(xmlFile.existsSync()){
+                              if (xmlFile.existsSync()) {
                                 var xmlString = xmlFile.readAsStringSync();
-                                print(xmlString);
+                                var xmlData = xml.parse(xmlString);
+                                var objects = xmlData.findAllElements('object');
+                                var objectStrings =
+                                    objects.map((xmlNode) => xmlNode.text);
+                                print(objectStrings);
                               }
-                            }); });
-                                             }
+                            });
+                          });
+                        }
                       },
                     );
                   },
                   icon: Icon(Icons.folder_open),
-                )
+                  tooltip: 'Open Images Folder',
+                ),
+                IconButton(icon: Icon(Icons.keyboard_arrow_left), onPressed: (){
+                  setState(() {
+                    imageindex --;
+                  });
+                }, tooltip: 'Back a Image',),
+                IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: (){
+                  setState(() {
+                  imageindex ++;
+                  });
+                }, tooltip: 'Next Image',)
               ],
             ),
           ),
@@ -147,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: Stack(
                   children: <Widget>[
-                    Image.file(File(path)),
+                    Image.file(File(imagePaths[imageindex])),
                     Positioned(
                         top: 0,
                         bottom: 0,
