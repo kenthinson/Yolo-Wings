@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:xml/xml.dart';
 
 import 'package:flutter/material.dart';
 import 'package:file_chooser/file_chooser.dart' as file_chooser;
@@ -79,16 +80,22 @@ class _MyHomePageState extends State<MyHomePage> {
                           var lister = dir.list(recursive: false);
                           List<String> filePaths = [];
                           lister.listen((file) {
-                            if(extension(file.path) == ".jpg" || extension(file.path) == ".jpeg"){
-                            filePaths.add(file.path);
+                            if (extension(file.path) == ".jpg" ||
+                                extension(file.path) == ".jpeg") {
+                              filePaths.add(file.path);
                             }
                           }, onDone: () {
                             setState(() {
                               imagePaths = filePaths;
                               path = imagePaths[0];
-                            });
-                          });
-                        }
+                              var xmlPath = withoutExtension(imagePaths[0]) + '.xml';
+                              var xmlFile = File(xmlPath);
+                              if(xmlFile.existsSync()){
+                                var xmlString = xmlFile.readAsStringSync();
+                                print(xmlString);
+                              }
+                            }); });
+                                             }
                       },
                     );
                   },
