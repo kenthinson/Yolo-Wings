@@ -93,10 +93,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               if (xmlFile.existsSync()) {
                                 var xmlString = xmlFile.readAsStringSync();
                                 var xmlData = xml.parse(xmlString);
-                                var objects = xmlData.findAllElements('object');
-                                var objectStrings =
-                                    objects.map((xmlNode) => xmlNode.text);
-                                print(objectStrings);
+                                var objects = xmlData.findAllElements('object').toList();
+                                print(objects[0].text);
                               }
                             });
                           });
@@ -112,11 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     imageindex --;
                   });
                 } : null, tooltip: 'Back a Image',),
-                IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: (){
+                IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: (imageindex != imagePaths.length-1) ? (){
                   setState(() {
                   imageindex ++;
                   });
-                }, tooltip: 'Next Image',)
+                } : null , tooltip: 'Next Image',)
               ],
             ),
           ),
