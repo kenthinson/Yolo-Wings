@@ -44,10 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> imagePaths = [""];
 
   Annotation newAnnotaton;
-  List<Annotation> currentImageAnnotations = [
-    Annotation(Offset(10, 10), Offset(100, 100), 0),
-    Annotation(Offset(500, 500), Offset(600, 600), 1),
-  ];
+  List<Annotation> currentImageAnnotations = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,16 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           }, onDone: () {
                             setState(() {
                               imagePaths = filePaths;
-                              var xmlPath =
-                                  withoutExtension(imagePaths[0]) + '.xml';
-                              var xmlFile = File(xmlPath);
-                              if (xmlFile.existsSync()) {
-                                var xmlString = xmlFile.readAsStringSync();
-                                var xmlData = xml.parse(xmlString);
-                                var objects = xmlData.findAllElements('object').toList();
-                                print(objects[0].text);
-                              }
                             });
+                              currentImageAnnotations = loadXMLAnnotations(imagePaths[imageindex]);
                           });
                         }
                       },
@@ -105,16 +95,30 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icon(Icons.folder_open),
                   tooltip: 'Open Images Folder',
                 ),
-                IconButton(icon: Icon(Icons.keyboard_arrow_left), onPressed:(imageindex != 0)? (){
-                  setState(() {
-                    imageindex --;
-                  });
-                } : null, tooltip: 'Back a Image',),
-                IconButton(icon: Icon(Icons.keyboard_arrow_right), onPressed: (imageindex != imagePaths.length-1) ? (){
-                  setState(() {
-                  imageindex ++;
-                  });
-                } : null , tooltip: 'Next Image',)
+                IconButton(
+                  icon: Icon(Icons.keyboard_arrow_left),
+                  onPressed: (imageindex != 0)
+                      ? () {
+                          setState(() {
+                            imageindex--;
+                          });
+                          currentImageAnnotations = loadXMLAnnotations(imagePaths[imageindex]);
+                        }
+                      : null,
+                  tooltip: 'Back a Image',
+                ),
+                IconButton(
+                  icon: Icon(Icons.keyboard_arrow_right),
+                  onPressed: (imageindex != imagePaths.length - 1)
+                      ? () {
+                          setState(() {
+                            imageindex++;
+                            currentImageAnnotations= loadXMLAnnotations(imagePaths[imageindex]);
+                          });
+                        }
+                      : null,
+                  tooltip: 'Next Image',
+                )
               ],
             ),
           ),
@@ -414,4 +418,16 @@ class _MyHomePageState extends State<MyHomePage> {
       currentImageAnnotations.add(annotation);
     });
   }
+}
+
+List<Annotation> loadXMLAnnotations(String imgPath) {
+  var xmlPath = withoutExtension(imgPath) + '.xml';
+  var xmlFile = File(xmlPath);
+  if (xmlFile.existsSync()) {
+    var xmlString = xmlFile.readAsStringSync();
+    var xmlData = xml.parse(xmlString);
+    var objects = xmlData.findAllElements('object').toList();
+    print(objects[0].text);
+  }
+  return [];
 }
