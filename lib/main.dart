@@ -56,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 40,
             child: Row(
               children: <Widget>[
+                IconButton(icon: Icon(Icons.list), onPressed: (){}, tooltip: 'Select Label Map',),
                 IconButton(
                   onPressed: () async {
                     String initialDirectory;
@@ -92,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       },
                     );
                   },
-                  icon: Icon(Icons.folder_open),
+                  icon: Icon(Icons.filter),
                   tooltip: 'Open Images Folder',
                 ),
                 IconButton(
