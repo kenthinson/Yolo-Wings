@@ -40,6 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   var lastClassNameChoses = 0;
   var overlayShowing = false;
   var imageindex = 0;
+  var labelMapLoaded = false;
 
   List<String> imagePaths = [""];
 
@@ -75,14 +76,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       (result) {
                         if (result.canceled) {
                           print('canceled');
-                        } else {}
+                        } else {
+                          setState(() {
+                          labelMapLoaded = true;
+                          });
+                        }
                       },
                     );
                   },
                   tooltip: 'Select Label Map',
                 ),
                 IconButton(
-                  onPressed: () async {
+                  onPressed: labelMapLoaded ? () async {
                     String initialDirectory;
                     if (Platform.isMacOS) {
                       initialDirectory =
@@ -117,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         }
                       },
                     );
-                  },
+                  } : null,
                   icon: Icon(Icons.filter),
                   tooltip: 'Open Images Folder',
                 ),
