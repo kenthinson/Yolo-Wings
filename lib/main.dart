@@ -56,7 +56,31 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 40,
             child: Row(
               children: <Widget>[
-                IconButton(icon: Icon(Icons.list), onPressed: (){}, tooltip: 'Select Label Map',),
+                IconButton(
+                  icon: Icon(Icons.list),
+                  onPressed: () async {
+                    String initialDirectory;
+                    if (Platform.isMacOS) {
+                      initialDirectory =
+                          (await getApplicationDocumentsDirectory()).path;
+                    }
+                    file_chooser
+                        .showOpenPanel(
+                            allowsMultipleSelection: false,
+                            initialDirectory: initialDirectory,
+                            canSelectDirectories: false,
+                            allowedFileTypes: ['txt','pbtxt']
+                            )
+                        .then(
+                      (result) {
+                        if (result.canceled) {
+                          print('canceled');
+                        } else {}
+                      },
+                    );
+                  },
+                  tooltip: 'Select Label Map',
+                ),
                 IconButton(
                   onPressed: () async {
                     String initialDirectory;
@@ -87,7 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             setState(() {
                               imagePaths = filePaths;
                             });
-                              currentImageAnnotations = loadXMLAnnotations(imagePaths[imageindex]);
+                            currentImageAnnotations =
+                                loadXMLAnnotations(imagePaths[imageindex]);
                           });
                         }
                       },
@@ -103,7 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           setState(() {
                             imageindex--;
                           });
-                          currentImageAnnotations = loadXMLAnnotations(imagePaths[imageindex]);
+                          currentImageAnnotations =
+                              loadXMLAnnotations(imagePaths[imageindex]);
                         }
                       : null,
                   tooltip: 'Back a Image',
@@ -114,7 +140,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ? () {
                           setState(() {
                             imageindex++;
-                            currentImageAnnotations= loadXMLAnnotations(imagePaths[imageindex]);
+                            currentImageAnnotations =
+                                loadXMLAnnotations(imagePaths[imageindex]);
                           });
                         }
                       : null,
